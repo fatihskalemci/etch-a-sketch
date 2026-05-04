@@ -13,7 +13,8 @@ redrawButton.addEventListener('click', () => {
     newGridSize = prompt("Enter new grid size (max: 100)");
   } while (newGridSize > 100 || newGridSize <= 0 || isNaN(newGridSize) || Math.floor(+newGridSize) !== +newGridSize)
   clearGrid();
-  setGrid(+newGridSize);
+  padSide = +newGridSize;
+  setGrid(padSide);
 });
 
 const colorSwitch = document.querySelector("#color-mode");
@@ -25,6 +26,12 @@ colorSwitch.addEventListener('click', () => {
   }
 });
 
+const clearButton = document.querySelector("#clear");
+clearButton.addEventListener('click', () => {
+  clearGrid();
+  setGrid(padSide);
+})
+
 function setGrid(sidePixels){
   let padPixelNumber = sidePixels * sidePixels;
 
@@ -32,8 +39,14 @@ function setGrid(sidePixels){
     const div = document.createElement("div");
     div.classList.add("pixel");
     div.style.flex = `0 0 ${100/sidePixels}%`;
+    div.style.opacity = 0.1;
     div.addEventListener('mouseenter', () => {
+      if (!div.style.backgroundColor || div.style.backgroundColor === "black") {
         div.style.backgroundColor = colorPicker(colorMode);
+      }
+      if (+div.style.opacity < 1){
+        div.style.opacity = +div.style.opacity + 0.1;
+      }
     });
     container.appendChild(div);
   }
