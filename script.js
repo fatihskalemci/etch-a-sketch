@@ -1,3 +1,9 @@
+// Starting values
+let padSide = 16;
+let colorMode = "black"
+let scaleMode = "no-scale"
+
+
 const container = document.querySelector(".pad-container");
 
 const redrawButton = document.querySelector("#redraw");
@@ -8,9 +14,16 @@ redrawButton.addEventListener('click', () => {
   } while (newGridSize > 100 || newGridSize <= 0 || isNaN(newGridSize) || Math.floor(+newGridSize) !== +newGridSize)
   clearGrid();
   setGrid(+newGridSize);
-})
+});
 
-let padSide = 16;
+const colorSwitch = document.querySelector("#color-mode");
+colorSwitch.addEventListener('click', () => {
+  if (colorMode === "black") {
+    colorMode = "random";
+  } else {
+    colorMode = "black";
+  }
+});
 
 function setGrid(sidePixels){
   let padPixelNumber = sidePixels * sidePixels;
@@ -20,7 +33,7 @@ function setGrid(sidePixels){
     div.classList.add("pixel");
     div.style.flex = `0 0 ${100/sidePixels}%`;
     div.addEventListener('mouseenter', () => {
-        div.style.backgroundColor = "black"
+        div.style.backgroundColor = colorPicker(colorMode);
     });
     container.appendChild(div);
   }
@@ -32,6 +45,27 @@ function clearGrid() {
   }
 }
 
+function colorPicker(mode) {
+  switch (mode) {
+    case "black":
+      return "black";
+      break;
+    case "random":
+      return randomColor();
+      break;
+    default:
+      return "black";
+      break;
+  }
+}
+
+function randomColor() {
+  // Source - https://stackoverflow.com/a/5365036
+  // Posted by ZPiDER, modified by community. See post 'Timeline' for change history
+  // Retrieved 2026-05-04, License - CC BY-SA 4.0
+
+  return "#" + ((1 << 24) * Math.random() | 0).toString(16).padStart(6, "0")
+}
 
 
 setGrid(padSide)
